@@ -322,6 +322,8 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
       maturidade: document.getElementById('maturidade').value || null,
       interesse: document.getElementById('interesse').value || null,
       observacoes: document.getElementById('observacoes').value.trim() || null,
+      aceite_privacidade: document.getElementById('privacidade').checked,
+      aceite_privacidade_at: document.getElementById('privacidade').checked ? new Date().toISOString() : null,
       status: 'novo',
       fonte: 'site'
     };
