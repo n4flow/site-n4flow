@@ -44,7 +44,7 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.2);font-family:var(--mono);mar
 </head>
 <body>
 <nav>
-<a href="/"><img src="/logo-laranja.svg" alt="n4flow" style="height:36px;"></a>
+  <a href="/" class="nav-logo"><span class="n4">n4</span><span class="flow">flow</span></a>
   <a href="/" class="nav-back">&#8592; Voltar ao site</a>
 </nav>
 <section class="diag-hero">
@@ -62,8 +62,8 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.2);font-family:var(--mono);mar
 <section class="form-section fade-up fd4">
   <h2 class="form-title">Solicite seu diagn&#243;stico gratuito</h2>
   <p class="form-subtitle">Responda algumas perguntas r&#225;pidas para que possamos entender seu cen&#225;rio e preparar a conversa.</p>
-  <form name="diagnostico" method="POST" data-netlify="true" action="/diagnostico/obrigado.html">
-    <input type="hidden" name="form-name" value="diagnostico">
+  <form id="form-diagnostico">
+    
     <div class="form-row">
       <div class="form-group"><label>Nome *</label><input type="text" name="nome" placeholder="Seu nome" required></div>
       <div class="form-group"><label>Sobrenome *</label><input type="text" name="sobrenome" placeholder="Seu sobrenome" required></div>
@@ -89,14 +89,69 @@ footer p{font-size:.75rem;color:rgba(255,255,255,.2);font-family:var(--mono);mar
       <select name="interesse"><option value="" disabled selected>Selecione...</option><option>Automatizar processos</option><option>Organizar dados para gest&#227;o</option><option>Usar IA de forma pr&#225;tica</option><option>Tudo acima</option><option>Quero entender melhor</option></select>
     </div>
     <div class="form-group"><label>Algo mais que queira nos contar?</label><textarea name="observacoes" placeholder="Contexto extra, d&#250;vidas, desafios espec&#237;ficos..."></textarea></div>
-    <button type="submit" class="submit-btn">Solicitar diagn&#243;stico <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+    <button type="submit" id="submit-btn" class="submit-btn">Solicitar diagn&#243;stico <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
     <p class="submit-note">Nossa equipe vai analisar e entrar em contato para agendar seu diagn&#243;stico.</p>
   </form>
 </section>
 <footer>
-<a href="/"><img src="/logo-branco.svg" alt="n4flow" style="height:36px;"></a>
+  <a href="/" class="nav-logo"><span class="n4">n4</span><span class="flow">flow</span></a>
   <p>IA, Dados &amp; Automação aplicados ao que trava o crescimento da sua empresa.</p>
   <p>S&#227;o Paulo, SP &#183; Atendimento em todo o Brasil</p>
 </footer>
+
+<script>
+const SUPABASE_URL = 'https://mgmqpvpoumuqmtnefhom.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_k5y8Mk35XkhslCKWsMo-Sg_JZKPN0wc';
+
+document.getElementById('form-diagnostico').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  const data = {
+    nome: document.querySelector('[name=nome]').value,
+    sobrenome: document.querySelector('[name=sobrenome]').value,
+    email: document.querySelector('[name=email]').value,
+    empresa: document.querySelector('[name=empresa]').value,
+    cargo: document.querySelector('[name=cargo]').value || null,
+    whatsapp: document.querySelector('[name=whatsapp]').value || null,
+    tamanho: document.querySelector('[name=tamanho]').value || null,
+    desafio: document.querySelector('[name=desafio]').value || null,
+    maturidade: document.querySelector('[name=maturidade]').value || null,
+    interesse: document.querySelector('[name=interesse]').value || null,
+    observacoes: document.querySelector('[name=observacoes]').value || null,
+    status: 'novo',
+    fonte: 'site'
+  };
+
+  try {
+    const response = await fetch(SUPABASE_URL + '/rest/v1/leads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      window.location.href = '/diagnostico/obrigado/';
+    } else {
+      const err = await response.json();
+      console.error(err);
+      btn.textContent = 'Erro ao enviar. Tente novamente.';
+      btn.disabled = false;
+    }
+  } catch (error) {
+    console.error(error);
+    btn.textContent = 'Erro ao enviar. Tente novamente.';
+    btn.disabled = false;
+  }
+});
+</script>
 </body>
 </html>
