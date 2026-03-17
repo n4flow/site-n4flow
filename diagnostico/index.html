@@ -38,6 +38,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .form-group input.input-error,.form-group select.input-error{border-color:#E53E3E}
 .field-error{font-size:.72rem;color:#E53E3E;margin-top:.3rem;display:none}
 .field-error.visible{display:block}
+.char-count{font-size:.68rem;color:var(--g400);text-align:right;margin-top:.3rem;font-family:var(--mono)}
 .checkbox-group{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:1.2rem;margin-top:.5rem}
 .checkbox-group input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;appearance:auto;-webkit-appearance:auto}
 .checkbox-group label{font-size:.8rem;color:var(--g500);line-height:1.5;cursor:pointer;font-weight:400}
@@ -86,14 +87,14 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
       <div class="form-group"><label>Sobrenome *</label><input type="text" name="sobrenome" placeholder="Seu sobrenome" required></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Email profissional *</label><input type="email" name="email" placeholder="seu@empresa.com" required></div>
+      <div class="form-group"><label>Email profissional *</label><input type="email" name="email" id="email" placeholder="seu@empresa.com" required><div class="field-error" id="email-error">Verifique o email digitado.</div></div>
       <div class="form-group"><label>Empresa *</label><input type="text" name="empresa" placeholder="Nome da empresa" required></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Cargo *</label><input type="text" name="cargo" placeholder="Seu cargo na empresa" required></div>
+      <div class="form-group"><label>Cargo</label><input type="text" name="cargo" placeholder="Seu cargo na empresa"></div>
       <div class="form-group">
-        <label>WhatsApp *</label>
-        <input type="tel" name="whatsapp" id="whatsapp" placeholder="(00) 00000-0000" required maxlength="15">
+        <label>WhatsApp</label>
+        <input type="tel" name="whatsapp" id="whatsapp" placeholder="(00) 00000-0000" maxlength="15">
         <div class="field-error" id="whatsapp-error">Informe um número válido com DDD + 8 ou 9 dígitos.</div>
       </div>
     </div>
@@ -109,7 +110,7 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
     <div class="form-group"><label>O que mais te interessou na n4flow? *</label>
       <select name="interesse" required><option value="" disabled selected>Selecione...</option><option>Automatizar processos</option><option>Organizar dados para gest&#227;o</option><option>Usar IA de forma pr&#225;tica</option><option>Tudo acima</option><option>Quero entender melhor</option></select>
     </div>
-    <div class="form-group"><label>Algo mais que queira nos contar?</label><textarea name="observacoes" placeholder="Contexto extra, d&#250;vidas, desafios espec&#237;ficos..."></textarea></div>
+    <div class="form-group"><label>Algo mais que queira nos contar?</label><textarea name="observacoes" id="observacoes" placeholder="Contexto extra, d&#250;vidas, desafios espec&#237;ficos..." maxlength="1000"></textarea><div class="char-count" id="char-count">0 / 1.000 caracteres</div></div>
     
     <div class="checkbox-group">
       <input type="checkbox" id="privacidade" name="privacidade" required>
@@ -159,6 +160,25 @@ function validateWhatsApp() {
   return raw.length >= 10 && raw.length <= 11;
 }
 
+// ── Char counter for observacoes ──
+const obsInput = document.getElementById('observacoes');
+const charCount = document.getElementById('char-count');
+obsInput.addEventListener('input', function() {
+  charCount.textContent = obsInput.value.length + ' / 1.000 caracteres';
+});
+
+// ── Email validation ──
+function validateEmail() {
+  const email = document.getElementById('email').value.trim();
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!re.test(email)) return false;
+  const typos = ['gnail.com','gmial.com','gmai.com','gmaill.com','gamil.com','gmil.com','hotmal.com','hotmai.com','hotmial.com','yaho.com','yahooo.com','outlok.com','outloo.com'];
+  const domain = email.split('@')[1].toLowerCase();
+  if (typos.includes(domain)) return false;
+  if (/[,\s]/.test(email) || /\.\./.test(email)) return false;
+  return true;
+}
+
 // ── Form submit ──
 const SUPABASE_URL = 'https://mgmqpvpoumuqmtnefhom.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_k5y8Mk35XkhslCKWsMo-Sg_JZKPN0wc';
@@ -166,9 +186,23 @@ const SUPABASE_KEY = 'sb_publishable_k5y8Mk35XkhslCKWsMo-Sg_JZKPN0wc';
 document.getElementById('form-diagnostico').addEventListener('submit', async function(e) {
   e.preventDefault();
 
-  // Validate WhatsApp
+  // Validate email
+  const emailInput = document.getElementById('email');
+  const emailErr = document.getElementById('email-error');
+  if (!validateEmail()) {
+    emailInput.classList.add('input-error');
+    emailErr.classList.add('visible');
+    emailInput.focus();
+    return;
+  } else {
+    emailInput.classList.remove('input-error');
+    emailErr.classList.remove('visible');
+  }
+
+  // Validate WhatsApp (only if filled)
   const whatsErr = document.getElementById('whatsapp-error');
-  if (!validateWhatsApp()) {
+  const whatsRaw = whatsappInput.value.replace(/\D/g, '');
+  if (whatsRaw.length > 0 && !validateWhatsApp()) {
     whatsappInput.classList.add('input-error');
     whatsErr.classList.add('visible');
     whatsappInput.focus();
@@ -222,15 +256,4 @@ document.getElementById('form-diagnostico').addEventListener('submit', async fun
     } else {
       const err = await response.json();
       console.error(err);
-      btn.textContent = 'Erro ao enviar. Tente novamente.';
-      btn.disabled = false;
-    }
-  } catch (error) {
-    console.error(error);
-    btn.textContent = 'Erro ao enviar. Tente novamente.';
-    btn.disabled = false;
-  }
-});
-</script>
-</body>
-</html>
+      btn.textContent = '
