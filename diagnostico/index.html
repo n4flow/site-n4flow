@@ -35,8 +35,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,123,43,.1)}
 .form-group input::placeholder,.form-group textarea::placeholder{color:var(--g400)}
 .form-group textarea{resize:vertical;min-height:80px}
+.form-group input.input-error,.form-group select.input-error{border-color:#E53E3E}
+.field-error{font-size:.72rem;color:#E53E3E;margin-top:.3rem;display:none}
+.field-error.visible{display:block}
+.checkbox-group{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:1.2rem;margin-top:.5rem}
+.checkbox-group input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;appearance:auto;-webkit-appearance:auto}
+.checkbox-group label{font-size:.8rem;color:var(--g500);line-height:1.5;cursor:pointer;font-weight:400}
+.checkbox-group label a{color:var(--orange);text-decoration:underline;font-weight:500}
+.checkbox-group label a:hover{color:#D96A1F}
 .submit-btn{width:100%;padding:1rem;background:var(--orange);color:#fff;font-size:1rem;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:var(--font);transition:all .3s;margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:.5rem}
 .submit-btn:hover{background:#D96A1F;transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,123,43,.35)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
 .submit-note{text-align:center;font-size:.76rem;color:var(--g400);margin-top:.8rem;font-family:var(--mono)}
 footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,.08)}
 .footer-content{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center}
@@ -70,7 +79,7 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
 <section class="form-section fade-up fd4">
   <h2 class="form-title">Solicite seu diagn&#243;stico gratuito</h2>
   <p class="form-subtitle">Responda algumas perguntas r&#225;pidas para que possamos entender seu cen&#225;rio e preparar a conversa.</p>
-  <form id="form-diagnostico">
+  <form id="form-diagnostico" novalidate>
     
     <div class="form-row">
       <div class="form-group"><label>Nome *</label><input type="text" name="nome" placeholder="Seu nome" required></div>
@@ -81,8 +90,12 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
       <div class="form-group"><label>Empresa *</label><input type="text" name="empresa" placeholder="Nome da empresa" required></div>
     </div>
     <div class="form-row">
-      <div class="form-group"><label>Cargo</label><input type="text" name="cargo" placeholder="Seu cargo na empresa"></div>
-      <div class="form-group"><label>WhatsApp</label><input type="tel" name="whatsapp" placeholder="(00) 00000-0000"></div>
+      <div class="form-group"><label>Cargo *</label><input type="text" name="cargo" placeholder="Seu cargo na empresa" required></div>
+      <div class="form-group">
+        <label>WhatsApp *</label>
+        <input type="tel" name="whatsapp" id="whatsapp" placeholder="(00) 00000-0000" required maxlength="15">
+        <div class="field-error" id="whatsapp-error">Informe um número válido com DDD + 8 ou 9 dígitos.</div>
+      </div>
     </div>
     <div class="form-group"><label>Quantas pessoas na opera&#231;&#227;o? *</label>
       <select name="tamanho" required><option value="" disabled selected>Selecione...</option><option>At&#233; 10</option><option>11 a 50</option><option>51 a 200</option><option>Mais de 200</option></select>
@@ -90,13 +103,19 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
     <div class="form-group"><label>Qual o maior desafio da sua opera&#231;&#227;o hoje? *</label>
       <select name="desafio" required><option value="" disabled selected>Selecione...</option><option>Tarefas manuais e repetitivas</option><option>Dados espalhados em v&#225;rias ferramentas</option><option>Dificuldade em acompanhar indicadores</option><option>Atendimento lento ou desorganizado</option><option>Outro</option></select>
     </div>
-    <div class="form-group"><label>J&#225; usam alguma ferramenta de BI, automa&#231;&#227;o ou IA?</label>
-      <select name="maturidade"><option value="" disabled selected>Selecione...</option><option>Sim, v&#225;rias</option><option>Sim, algumas b&#225;sicas</option><option>N&#227;o, quase tudo &#233; manual</option><option>N&#227;o sei</option></select>
+    <div class="form-group"><label>J&#225; usam alguma ferramenta de BI, automa&#231;&#227;o ou IA? *</label>
+      <select name="maturidade" required><option value="" disabled selected>Selecione...</option><option>Sim, v&#225;rias</option><option>Sim, algumas b&#225;sicas</option><option>N&#227;o, quase tudo &#233; manual</option><option>N&#227;o sei</option></select>
     </div>
-    <div class="form-group"><label>O que mais te interessou na n4flow?</label>
-      <select name="interesse"><option value="" disabled selected>Selecione...</option><option>Automatizar processos</option><option>Organizar dados para gest&#227;o</option><option>Usar IA de forma pr&#225;tica</option><option>Tudo acima</option><option>Quero entender melhor</option></select>
+    <div class="form-group"><label>O que mais te interessou na n4flow? *</label>
+      <select name="interesse" required><option value="" disabled selected>Selecione...</option><option>Automatizar processos</option><option>Organizar dados para gest&#227;o</option><option>Usar IA de forma pr&#225;tica</option><option>Tudo acima</option><option>Quero entender melhor</option></select>
     </div>
     <div class="form-group"><label>Algo mais que queira nos contar?</label><textarea name="observacoes" placeholder="Contexto extra, d&#250;vidas, desafios espec&#237;ficos..."></textarea></div>
+    
+    <div class="checkbox-group">
+      <input type="checkbox" id="privacidade" name="privacidade" required>
+      <label for="privacidade">Li e concordo com a <a href="/privacidade/" target="_blank">Política de Privacidade</a> da n4flow. *</label>
+    </div>
+
     <button type="submit" id="submit-btn" class="submit-btn">Solicitar diagn&#243;stico <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
     <p class="submit-note">Nossa equipe vai analisar e entrar em contato para agendar seu diagn&#243;stico.</p>
   </form>
@@ -112,17 +131,59 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
       <a href="/">Home</a>
       <a href="/solucoes/">Soluções</a>
       <a href="/#metodo">Método</a>
+      <a href="/privacidade/">Privacidade</a>
       <a href="#" target="_blank">LinkedIn</a>
     </div>
   </div>
 </footer>
 
 <script>
+// ── WhatsApp mask: (00) 00000-0000 ──
+const whatsappInput = document.getElementById('whatsapp');
+whatsappInput.addEventListener('input', function(e) {
+  let v = e.target.value.replace(/\D/g, '');
+  if (v.length > 11) v = v.slice(0, 11);
+  if (v.length > 7) {
+    v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+  } else if (v.length > 2) {
+    v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+  } else if (v.length > 0) {
+    v = '(' + v;
+  }
+  e.target.value = v;
+});
+
+// ── Validate WhatsApp: DDD (2 digits) + 8 or 9 digits ──
+function validateWhatsApp() {
+  const raw = whatsappInput.value.replace(/\D/g, '');
+  return raw.length >= 10 && raw.length <= 11;
+}
+
+// ── Form submit ──
 const SUPABASE_URL = 'https://mgmqpvpoumuqmtnefhom.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_k5y8Mk35XkhslCKWsMo-Sg_JZKPN0wc';
 
 document.getElementById('form-diagnostico').addEventListener('submit', async function(e) {
   e.preventDefault();
+
+  // Validate WhatsApp
+  const whatsErr = document.getElementById('whatsapp-error');
+  if (!validateWhatsApp()) {
+    whatsappInput.classList.add('input-error');
+    whatsErr.classList.add('visible');
+    whatsappInput.focus();
+    return;
+  } else {
+    whatsappInput.classList.remove('input-error');
+    whatsErr.classList.remove('visible');
+  }
+
+  // Validate privacy checkbox
+  const privCheckbox = document.getElementById('privacidade');
+  if (!privCheckbox.checked) {
+    privCheckbox.focus();
+    return;
+  }
 
   const btn = document.getElementById('submit-btn');
   btn.textContent = 'Enviando...';
