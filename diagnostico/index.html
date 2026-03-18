@@ -356,5 +356,29 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
 
 })();
 </script>
+<!-- ═══ COOKIE CONSENT ═══ -->
+<div id="cookie-consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:0 1rem 1rem">
+  <div style="max-width:520px;margin:0 auto;background:#1A1D23;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.2rem 1.5rem;box-shadow:0 8px 40px rgba(0,0,0,.25);display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <p style="font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.6;margin:0;font-family:'Outfit','Plus Jakarta Sans',-apple-system,sans-serif">
+        Utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa
+        <a href="/privacidade/" target="_blank" style="color:#F07B2B;text-decoration:underline;font-weight:500">Política de Privacidade</a>.
+      </p>
+    </div>
+    <button onclick="acceptCookies()" style="padding:.6rem 1.5rem;background:#F07B2B;color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'Outfit','Plus Jakarta Sans',-apple-system,sans-serif;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#D96A1F'" onmouseout="this.style.background='#F07B2B'">Aceitar</button>
+  </div>
+</div>
+<script>
+(function(){
+  if(document.cookie.indexOf('n4flow_cookies=accepted')!==-1)return;
+  var el=document.getElementById('cookie-consent');
+  if(el)el.style.display='block';
+})();
+function acceptCookies(){
+  document.cookie='n4flow_cookies=accepted;path=/;max-age=31536000;SameSite=Lax';
+  var el=document.getElementById('cookie-consent');
+  if(el)el.style.display='none';
+}
+</script>
 </body>
 </html>
