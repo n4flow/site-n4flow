@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consultoria Estratégica — n4flow</title>
+<meta name="description" content="A n4flow apoia sua empresa na escolha e implementação das ferramentas certas para dar estrutura à adoção de IA, dados e automação.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #F07B2B;
+  --accent-dark: #D96A1F;
+  --accent-light: #F59D5E;
+  --accent-glow: rgba(240,123,43,.10);
+  --accent-glow2: rgba(240,123,43,.05);
+  --bg: #FFFFFF;
+  --bg-warm: #FAFAF8;
+  --bg-soft: #F5F4F1;
+  --bg-muted: #EEECEA;
+  --dark: #1A1D23;
+  --dark-card: #22262E;
+  --dark-surface: #2A2F38;
+  --dark-border: rgba(255,255,255,.08);
+  --text-dark: #1A1D23;
+  --text-body: #4A4E57;
+  --text-muted: #8A8D95;
+  --text-light: rgba(255,255,255,.9);
+  --text-light-secondary: rgba(255,255,255,.55);
+  --text-light-muted: rgba(255,255,255,.3);
+  --border: rgba(0,0,0,.07);
+  --border-hover: rgba(240,123,43,.25);
+  --font: 'Outfit', -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.04);
+  --shadow-md: 0 8px 30px rgba(0,0,0,.06);
+  --shadow-lg: 0 16px 50px rgba(0,0,0,.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  font-family: var(--font);
+  color: var(--text-dark);
+  background: var(--bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(28px) } to { opacity:1; transform:translateY(0) } }
+@keyframes pulse { 0%,100% { opacity:.4 } 50% { opacity:1 } }
+@keyframes float { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-8px) } }
+@keyframes slideInRight { from { opacity:0; transform:translateX(40px) } to { opacity:1; transform:translateX(0) } }
+@keyframes growWidth { from { width:0 } to { width:var(--target-w) } }
+@keyframes shimmer { 0% { background-position:-200% 0 } 100% { background-position:200% 0 } }
+
+.fade-up { animation: fadeUp .7s ease-out forwards; opacity:0; }
+.fd1 { animation-delay:.1s } .fd2 { animation-delay:.2s } .fd3 { animation-delay:.3s } .fd4 { animation-delay:.4s } .fd5 { animation-delay:.5s }
+.reveal { opacity:0; transform:translateY(24px); transition: all .7s cubic-bezier(.16,1,.3,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:.85rem 2rem;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
+.nav-logo { display:flex; align-items:center; gap:2px; text-decoration:none; }
+.nav-logo-svg { height:28px; width:auto; }
+.nav-links { display:flex; align-items:center; gap:2rem; }
+.nav-links a { text-decoration:none; font-size:.85rem; font-weight:500; color:var(--text-muted); transition:color .2s; }
+.nav-links a:hover { color:var(--text-dark); }
+.nav-links a.nav-cta {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.55rem 1.3rem;
+  background:var(--accent); color:#fff !important;
+  font-size:.82rem; font-weight:600;
+  border-radius:var(--radius-sm); text-decoration:none;
+  transition:all .25s; border:none; cursor:pointer;
+}
+.nav-links a.nav-cta:hover { background:var(--accent-dark); color:#fff !important; transform:translateY(-1px); box-shadow:0 4px 20px rgba(240,123,43,.3); }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:4px; }
+.hamburger span { width:22px; height:2px; background:var(--text-dark); transition:all .3s; border-radius:2px; }
+.mobile-menu { display:none; position:fixed; top:58px; left:0; right:0; background:var(--bg); padding:1.5rem 2rem; border-bottom:1px solid var(--border); flex-direction:column; gap:1.2rem; z-index:99; box-shadow:var(--shadow-md); }
+.mobile-menu.open { display:flex; }
+.mobile-menu a { text-decoration:none; font-size:.95rem; font-weight:500; color:var(--text-body); padding:.5rem 0; }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.9rem 2rem;
+  background:var(--accent); color:#fff;
+  font-size:.92rem; font-weight:600;
+  border-radius:10px; text-decoration:none;
+  transition:all .3s; border:none; cursor:pointer; font-family:var(--font);
+}
+.btn-primary:hover { background:var(--accent-dark); transform:translateY(-2px); box-shadow:0 8px 32px rgba(240,123,43,.3); }
+.btn-primary svg { width:18px; height:18px; }
+.btn-secondary {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.9rem 2rem;
+  background:transparent; color:var(--text-dark);
+  font-size:.92rem; font-weight:600;
+  border-radius:10px; text-decoration:none;
+  border:1.5px solid var(--border);
+  transition:all .3s; cursor:pointer; font-family:var(--font);
+}
+.btn-secondary:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+.btn-secondary-light {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.9rem 2rem;
+  background:transparent; color:var(--text-light);
+  font-size:.92rem; font-weight:600;
+  border-radius:10px; text-decoration:none;
+  border:1.5px solid rgba(255,255,255,.15);
+  transition:all .3s; cursor:pointer; font-family:var(--font);
+}
+.btn-secondary-light:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+
+/* ── SECTIONS BASE ── */
+section { padding:6rem 2rem; }
+.container { max-width:1100px; margin:0 auto; }
+.section-label {
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-family:var(--mono); font-size:.7rem; font-weight:500;
+  color:var(--accent); text-transform:uppercase; letter-spacing:.15em;
+  margin-bottom:1rem;
+}
+.section-label::before { content:''; width:18px; height:1.5px; background:var(--accent); }
+.section-title {
+  font-size:clamp(1.8rem,4vw,2.4rem);
+  font-weight:800; letter-spacing:-.03em; line-height:1.12;
+  color:var(--text-dark); margin-bottom:.8rem;
+}
+.section-desc {
+  font-size:1rem; color:var(--text-body); line-height:1.7;
+  max-width:560px; margin-bottom:3rem; font-weight:400;
+}
+.section-dark { background:var(--dark); color:var(--text-light); }
+.section-dark .section-title { color:var(--text-light); }
+.section-dark .section-desc { color:var(--text-light-secondary); }
+.section-soft { background:var(--bg-soft); }
+.section-warm { background:var(--bg-warm); }
+
+/* ══════════════════════════════════════════
+   CONSULTORIA PAGE SPECIFIC STYLES
+   ══════════════════════════════════════════ */
+
+/* ── PAGE HERO ── */
+.page-hero {
+  min-height:70vh;
+  display:flex; align-items:center;
+  padding:8rem 2rem 5rem;
+  position:relative;
+  overflow:hidden;
+}
+.page-hero::before {
+  content:''; position:absolute; top:-10%; right:-5%;
+  width:600px; height:600px;
+  background:radial-gradient(circle, rgba(240,123,43,.07) 0%, transparent 70%);
+  border-radius:50%; pointer-events:none;
+}
+.page-hero::after {
+  content:''; position:absolute; bottom:-20%; left:-10%;
+  width:400px; height:400px;
+  background:radial-gradient(circle, rgba(240,123,43,.04) 0%, transparent 70%);
+  border-radius:50%; pointer-events:none;
+}
+.page-hero .container { position:relative; z-index:2; }
+.page-hero .hero-badge {
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:.4rem 1rem .4rem .7rem;
+  background:var(--accent-glow);
+  border:1px solid rgba(240,123,43,.15);
+  border-radius:100px;
+  font-size:.75rem; font-weight:600; color:var(--accent);
+  margin-bottom:1.8rem;
+}
+.page-hero .hero-badge-dot { width:6px; height:6px; background:var(--accent); border-radius:50%; animation:pulse 2s ease-in-out infinite; }
+.page-hero h1 {
+  font-size:clamp(2.2rem,4.5vw,3.2rem);
+  font-weight:800; line-height:1.12; letter-spacing:-.04em;
+  max-width:700px; margin-bottom:1.4rem;
+}
+.page-hero h1 .accent { color:var(--accent); }
+.page-hero-sub {
+  font-size:1.08rem; line-height:1.75;
+  color:var(--text-body); max-width:580px;
+  margin-bottom:2.4rem; font-weight:400;
+}
+.page-hero-actions { display:flex; gap:1rem; flex-wrap:wrap; }
+
+/* ── FLOWMONDO-STYLE SERVICE BLOCKS ── */
+.service-block { padding:5rem 2rem; }
+.service-block:nth-child(even) { background:var(--bg-soft); }
+
+.service-grid {
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:4rem; align-items:center;
+}
+.service-grid.reverse .sv-visual { order:2; }
+.service-grid.reverse .sv-content { order:1; }
+
+/* ── SERVICE CONTENT ── */
+.sv-content {}
+.sv-content h2 {
+  font-size:clamp(1.5rem,3vw,1.9rem);
+  font-weight:800; line-height:1.15; letter-spacing:-.03em;
+  margin-bottom:1rem;
+}
+.sv-content > p {
+  font-size:.95rem; color:var(--text-body); line-height:1.7;
+  margin-bottom:2rem;
+}
+
+.sv-features {
+  display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;
+  margin-bottom:2rem;
+}
+.sv-feature {
+  display:flex; flex-direction:column; gap:.4rem;
+}
+.sv-feature-icon {
+  width:38px; height:38px; border-radius:10px;
+  background:var(--accent-glow); color:var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:.25rem;
+}
+.sv-feature-icon svg { width:18px; height:18px; }
+.sv-feature h4 { font-size:.88rem; font-weight:700; color:var(--text-dark); }
+.sv-feature p { font-size:.8rem; color:var(--text-muted); line-height:1.55; }
+
+.sv-actions { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+
+.sv-badge {
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.5rem 1rem;
+  background:var(--bg-soft); border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:.78rem; font-weight:500; color:var(--text-muted);
+}
+.sv-badge-icon {
+  width:20px; height:20px; border-radius:5px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.6rem; font-weight:800; color:#fff; flex-shrink:0;
+}
+
+/* ── SERVICE VISUAL PANELS ── */
+.sv-visual {
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  position:relative;
+}
+
+/* Dark UI Panel */
+.sv-panel {
+  background:var(--dark);
+  border:1px solid var(--dark-border);
+  border-radius:var(--radius-lg);
+  padding:1.8rem;
+  position:relative;
+  overflow:hidden;
+}
+.sv-panel::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent 0%, rgba(240,123,43,.3) 50%, transparent 100%);
+}
+
+.panel-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:1.2rem; padding-bottom:.8rem;
+  border-bottom:1px solid var(--dark-border);
+}
+.panel-header-left {
+  display:flex; align-items:center; gap:.5rem;
+}
+.panel-header-icon {
+  width:24px; height:24px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(240,123,43,.12); color:var(--accent);
+}
+.panel-header-icon svg { width:13px; height:13px; }
+.panel-title {
+  font-family:var(--mono); font-size:.72rem; font-weight:500;
+  color:var(--text-light); text-transform:uppercase; letter-spacing:.08em;
+}
+.panel-status {
+  display:flex; align-items:center; gap:.35rem;
+  font-family:var(--mono); font-size:.6rem; color:rgba(52,211,153,.8);
+}
+.panel-status::before {
+  content:''; width:5px; height:5px; background:#34D399;
+  border-radius:50%; animation:pulse 1.5s infinite;
+}
+
+/* Diagnostic rows */
+.diag-rows { display:flex; flex-direction:column; gap:.5rem; }
+.diag-row {
+  display:flex; align-items:center; gap:.75rem;
+  padding:.7rem .9rem;
+  background:var(--dark-card);
+  border:1px solid var(--dark-border);
+  border-radius:var(--radius-sm);
+  transition:all .3s;
+}
+.diag-row:hover {
+  background:var(--dark-surface);
+  border-color:rgba(255,255,255,.12);
+  transform:translateX(4px);
+}
+.diag-icon {
+  width:32px; height:32px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; flex-shrink:0;
+}
+.diag-icon.crm { background:rgba(96,165,250,.12); }
+.diag-icon.auto { background:rgba(240,123,43,.12); }
+.diag-icon.cloud { background:rgba(167,139,250,.12); }
+.diag-icon.ia { background:rgba(52,211,153,.12); }
+.diag-info { flex:1; min-width:0; }
+.diag-label { font-size:.78rem; font-weight:500; color:var(--text-light); }
+.diag-sub { font-family:var(--mono); font-size:.6rem; color:var(--text-light-muted); margin-top:1px; }
+.diag-score {
+  font-family:var(--mono); font-size:.62rem; font-weight:500;
+  padding:.2rem .6rem; border-radius:100px; flex-shrink:0;
+}
+.diag-score.high { background:rgba(52,211,153,.12); color:#34D399; }
+.diag-score.med { background:rgba(250,204,21,.12); color:#FACC15; }
+.diag-score.low { background:rgba(248,113,113,.1); color:#F87171; }
+
+/* Progress bar */
+.diag-progress {
+  margin-top:.8rem;
+  padding:.7rem .9rem;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--dark-border);
+  border-radius:var(--radius-sm);
+}
+.diag-progress-header {
+  display:flex; justify-content:space-between;
+  font-family:var(--mono); font-size:.6rem; color:var(--text-light-muted);
+  margin-bottom:.5rem;
+}
+.diag-progress-track {
+  width:100%; height:5px;
+  background:rgba(255,255,255,.06);
+  border-radius:100px; overflow:hidden;
+}
+.diag-progress-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg, var(--accent), var(--accent-light));
+  width:0; transition:width 1.5s cubic-bezier(.16,1,.3,1);
+}
+.diag-progress-fill.animated { width:var(--fill); }
+
+/* Cloud cards */
+.cloud-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:.6rem;
+  margin-bottom:.8rem;
+}
+.cloud-card {
+  padding:1rem .8rem;
+  background:var(--dark-card);
+  border:1px solid var(--dark-border);
+  border-radius:var(--radius-sm);
+  text-align:center;
+  transition:all .3s;
+}
+.cloud-card:hover {
+  background:var(--dark-surface);
+  border-color:rgba(255,255,255,.12);
+  transform:translateY(-2px);
+}
+.cloud-card-emoji { font-size:1.4rem; margin-bottom:.4rem; }
+.cloud-card-name { font-size:.78rem; font-weight:600; color:var(--text-light); }
+.cloud-card-type { font-family:var(--mono); font-size:.58rem; color:var(--text-light-muted); margin-top:2px; }
+
+/* Pipeline */
+.pipeline-bar {
+  display:flex; align-items:center; gap:0;
+  padding:.7rem .9rem;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--dark-border);
+  border-radius:var(--radius-sm);
+}
+.pipe-node {
+  display:flex; align-items:center; gap:.35rem;
+  font-family:var(--mono); font-size:.6rem; color:var(--text-light-muted);
+  white-space:nowrap;
+}
+.pipe-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.pipe-arrow {
+  flex:1; height:1px; margin:0 .5rem;
+  background:repeating-linear-gradient(90deg, rgba(255,255,255,.12) 0px, rgba(255,255,255,.12) 3px, transparent 3px, transparent 7px);
+  min-width:12px;
+}
+
+/* Journey steps */
+.journey-steps { display:flex; flex-direction:column; gap:0; }
+.journey-step {
+  display:flex; gap:.9rem;
+  padding-bottom:1.2rem;
+  position:relative;
+}
+.journey-step:last-child { padding-bottom:0; }
+.js-line {
+  display:flex; flex-direction:column; align-items:center;
+  width:30px; flex-shrink:0;
+}
+.js-circle {
+  width:30px; height:30px; border-radius:50%;
+  background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.72rem; font-weight:700; flex-shrink:0;
+  transition:all .3s;
+}
+.journey-step:hover .js-circle {
+  transform:scale(1.15);
+  box-shadow:0 0 16px rgba(240,123,43,.35);
+}
+.js-connector { flex:1; width:2px; background:rgba(240,123,43,.15); min-height:0; }
+.js-content { padding-top:3px; }
+.js-title { font-size:.85rem; font-weight:600; color:var(--text-light); margin-bottom:2px; }
+.js-desc { font-family:var(--mono); font-size:.68rem; color:var(--text-light-muted); line-height:1.5; }
+
+/* ── CASE STUDY BLOCK ── */
+.case-section {
+  padding:5rem 2rem;
+  background:var(--bg-warm);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.case-card {
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:auto 1fr;
+  gap:2rem; align-items:start;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:2.5rem;
+  transition:all .4s;
+}
+.case-card:hover { box-shadow:var(--shadow-lg); border-color:var(--border-hover); }
+.case-icon-wrap {
+  width:56px; height:56px;
+  background:var(--accent-glow);
+  border:1px solid rgba(240,123,43,.12);
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.4rem; flex-shrink:0;
+}
+.case-tag {
+  font-family:var(--mono); font-size:.65rem; font-weight:500;
+  color:var(--accent); text-transform:uppercase; letter-spacing:.12em;
+  margin-bottom:.6rem;
+}
+.case-content h3 {
+  font-size:1.2rem; font-weight:700; color:var(--text-dark);
+  margin-bottom:.7rem; letter-spacing:-.02em;
+}
+.case-content > p {
+  font-size:.9rem; color:var(--text-body); line-height:1.7;
+  margin-bottom:1.5rem;
+}
+
+/* Case flow steps */
+.case-flow {
+  display:flex; align-items:center; gap:0; flex-wrap:wrap;
+}
+.cf-step {
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.45rem .85rem;
+  background:var(--bg-soft); border:1px solid var(--border);
+  border-radius:100px;
+  font-size:.75rem; font-weight:500; color:var(--text-dark);
+  white-space:nowrap; transition:all .25s;
+}
+.cf-step:hover { border-color:var(--border-hover); background:var(--accent-glow); }
+.cf-arrow {
+  padding:0 .4rem;
+  color:var(--text-muted); font-size:.85rem;
+}
+
+/* ── CTA FINAL ── */
+.cta-final {
+  text-align:center; padding:5rem 2rem;
+  position:relative; overflow:hidden;
+  background:var(--dark);
+}
+.cta-final::before {
+  content:''; position:absolute; top:-40%; left:50%; transform:translateX(-50%);
+  width:700px; height:700px;
+  background:radial-gradient(circle, rgba(240,123,43,.1) 0%, transparent 70%);
+  border-radius:50%; pointer-events:none;
+}
+.cta-final .section-title { max-width:640px; margin:0 auto .8rem; color:var(--text-light); position:relative; z-index:2; }
+.cta-sub { font-size:1rem; color:var(--text-light-secondary); max-width:520px; margin:0 auto 2.5rem; line-height:1.7; position:relative; z-index:2; }
+.cta-buttons { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; position:relative; z-index:2; }
+
+/* ── FLOATING CONTACT ── */
+.float-contact {
+  position:fixed; bottom:1.5rem; right:1.5rem; z-index:90;
+  display:flex; align-items:center; gap:.5rem;
+  padding:.7rem 1.2rem .7rem .8rem;
+  background:var(--dark); color:var(--text-light);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;
+  text-decoration:none;
+  font-size:.78rem; font-weight:500;
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+  transition:all .3s;
+}
+.float-contact:hover { background:var(--accent); border-color:var(--accent); transform:translateY(-2px); box-shadow:0 8px 30px rgba(240,123,43,.3); }
+.float-contact svg { width:18px; height:18px; flex-shrink:0; }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--dark); border-top:1px solid var(--dark-border);
+  padding:2.5rem 2rem;
+}
+.footer-content {
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center;
+}
+.footer-logo { height:22px; width:auto; opacity:.5; }
+.footer-left p { font-size:.72rem; color:var(--text-light-muted); font-family:var(--mono); margin-top:.5rem; line-height:1.6; }
+.footer-links { display:flex; gap:1.5rem; }
+.footer-links a { font-family:var(--mono); font-size:.7rem; color:var(--text-light-muted); text-decoration:none; transition:color .2s; }
+.footer-links a:hover { color:var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:1024px) {
+  .page-hero { min-height:auto; padding:7rem 2rem 4rem; }
+}
+@media (max-width:900px) {
+  .nav-links { display:none; }
+  .hamburger { display:flex; }
+  .service-grid { grid-template-columns:1fr; gap:2.5rem; }
+  .service-grid.reverse .sv-visual { order:0; }
+  .service-grid.reverse .sv-content { order:0; }
+  .sv-features { grid-template-columns:1fr; }
+  section { padding:4rem 1.2rem; }
+  .service-block { padding:3.5rem 1.2rem; }
+  nav { padding:.8rem 1.2rem; }
+  .footer-content { grid-template-columns:1fr; text-align:center; }
+  .footer-links { justify-content:center; }
+  .case-card { grid-template-columns:1fr; padding:1.5rem; }
+  .cloud-grid { grid-template-columns:1fr 1fr; }
+  .case-flow { gap:.3rem; }
+}
+@media (max-width:600px) {
+  .page-hero h1 { font-size:1.8rem; }
+  .cloud-grid { grid-template-columns:1fr; }
+  .pipeline-bar { flex-wrap:wrap; gap:.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV (identical to homepage) ═══ -->
+<nav>
+  <a href="/" class="nav-logo" aria-label="n4flow - Página inicial">
+    <img src="/logo-laranja.svg" alt="n4flow" class="nav-logo-svg">
+  </a>
+  <div class="nav-links">
+    <a href="/solucoes/">Soluções</a>
+    <a href="/consultoria/" style="color:var(--text-dark);font-weight:600">Consultoria</a>
+    <a href="/#aplicacoes">Aplicações</a>
+    <a href="/#metodo">Método</a>
+    <a href="/#faq">FAQ</a>
+    <a href="/diagnostico/" class="nav-cta">Solicitar diagnóstico</a>
+  </div>
+  <button class="hamburger" onclick="document.getElementById('mob-menu').classList.toggle('open')" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mob-menu">
+  <a href="/solucoes/" onclick="this.parentElement.classList.remove('open')">Soluções</a>
+  <a href="/consultoria/" onclick="this.parentElement.classList.remove('open')" style="font-weight:600">Consultoria</a>
+  <a href="/#aplicacoes" onclick="this.parentElement.classList.remove('open')">Aplicações</a>
+  <a href="/#metodo" onclick="this.parentElement.classList.remove('open')">Método</a>
+  <a href="/#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
+  <a href="/diagnostico/" style="color:var(--accent);font-weight:700">Solicitar diagnóstico</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     1. PAGE HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-badge fade-up"><span class="hero-badge-dot"></span> Consultoria Estratégica</div>
+    <h1 class="fade-up fd1">A base certa antes da <span class="accent">automação</span> e da <span class="accent">inteligência artificial</span></h1>
+    <p class="page-hero-sub fade-up fd2">A n4flow apoia sua empresa na escolha e implementação das ferramentas que darão estrutura e sustentabilidade para a adoção de IA, dados e automação.</p>
+    <div class="page-hero-actions fade-up fd3">
+      <a href="/diagnostico/" class="btn-primary">Agendar diagnóstico <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      <a href="https://wa.me/551152864920?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20consultoria" target="_blank" rel="noopener" class="btn-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="opacity:.45"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Falar com a n4flow</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     2. BLOCO 1 — DIAGNÓSTICO & RECOMENDAÇÃO
+     ═══════════════════════════════════════════════════════════ -->
+<div class="service-block">
+  <div class="service-grid">
+
+    <!-- Visual: Diagnostic Panel -->
+    <div class="sv-visual reveal">
+      <div class="sv-panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-header-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <span class="panel-title">Diagnóstico de maturidade</span>
+          </div>
+          <div class="panel-status">Análise ativa</div>
+        </div>
+
+        <div class="diag-rows">
+          <div class="diag-row">
+            <div class="diag-icon crm">🔗</div>
+            <div class="diag-info">
+              <div class="diag-label">CRM & Integrações</div>
+              <div class="diag-sub">APIs, conectores, ecossistema</div>
+            </div>
+            <span class="diag-score med">Médio</span>
+          </div>
+          <div class="diag-row">
+            <div class="diag-icon auto">⚡</div>
+            <div class="diag-info">
+              <div class="diag-label">Automação de processos</div>
+              <div class="diag-sub">Fluxos, triggers, escalabilidade</div>
+            </div>
+            <span class="diag-score high">Alto</span>
+          </div>
+          <div class="diag-row">
+            <div class="diag-icon cloud">☁️</div>
+            <div class="diag-info">
+              <div class="diag-label">Infraestrutura de dados</div>
+              <div class="diag-sub">Data warehouse, pipelines, BI</div>
+            </div>
+            <span class="diag-score low">Baixo</span>
+          </div>
+          <div class="diag-row">
+            <div class="diag-icon ia">🤖</div>
+            <div class="diag-info">
+              <div class="diag-label">Prontidão para IA</div>
+              <div class="diag-sub">Chatbots, agentes, LLMs</div>
+            </div>
+            <span class="diag-score med">Médio</span>
+          </div>
+        </div>
+
+        <div class="diag-progress">
+          <div class="diag-progress-header">
+            <span>Maturidade geral</span>
+            <span>62%</span>
+          </div>
+          <div class="diag-progress-track">
+            <div class="diag-progress-fill" style="--fill:62%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="sv-content reveal">
+      <span class="section-label">Diagnóstico & Recomendação</span>
+      <h2>Mapeamos seu cenário e indicamos as ferramentas certas</h2>
+      <p>Antes de automatizar, é preciso ter a base certa. Avaliamos seu stack atual — CRM, comunicação, dados — e recomendamos as soluções que vão dar sustentação real às frentes de automação e IA conversacional.</p>
+
+      <div class="sv-features">
+        <div class="sv-feature">
+          <div class="sv-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg></div>
+          <h4>Análise imparcial</h4>
+          <p>Não vendemos licença de software. Indicamos o que faz sentido para seu cenário.</p>
+        </div>
+        <div class="sv-feature">
+          <div class="sv-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <h4>Visão de longo prazo</h4>
+          <p>Pensamos em APIs, integrações e escalabilidade desde o primeiro momento.</p>
+        </div>
+      </div>
+
+      <div class="sv-actions">
+        <a href="/diagnostico/" class="btn-primary">Agendar diagnóstico <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     3. CASO REAL
+     ═══════════════════════════════════════════════════════════ -->
+<section class="case-section">
+  <div class="case-card reveal">
+    <div class="case-icon-wrap">💡</div>
+    <div class="case-content">
+      <div class="case-tag">Caso real</div>
+      <h3>Migração de CRM para viabilizar automação e IA conversacional</h3>
+      <p>Um cliente precisava de um CRM com API aberta e boas integrações para suportar suas frentes de automação. Após analisar o cenário, indicamos a Bitrix24 como a solução ideal — e conectamos com o parceiro certo para desenvolvimento e configuração. Resultado: ecossistema preparado para escalar com IA.</p>
+      <div class="case-flow">
+        <span class="cf-step">📋 Diagnóstico</span>
+        <span class="cf-arrow">→</span>
+        <span class="cf-step">🔍 Análise de mercado</span>
+        <span class="cf-arrow">→</span>
+        <span class="cf-step" style="border-color:var(--border-hover);background:var(--accent-glow)">✅ Bitrix24 indicada</span>
+        <span class="cf-arrow">→</span>
+        <span class="cf-step">🤝 Parceiro conectado</span>
+        <span class="cf-arrow">→</span>
+        <span class="cf-step">🚀 Pronto para IA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     4. BLOCO 2 — CLOUD & BI (reversed layout)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="service-block">
+  <div class="service-grid reverse">
+
+    <!-- Visual: Cloud Panel -->
+    <div class="sv-visual reveal">
+      <div class="sv-panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-header-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+            <span class="panel-title">Cloud & BI</span>
+          </div>
+          <div class="panel-status">Implementação</div>
+        </div>
+
+        <div class="cloud-grid">
+          <div class="cloud-card">
+            <div class="cloud-card-emoji">📊</div>
+            <div class="cloud-card-name">Google BigQuery</div>
+            <div class="cloud-card-type">Data Warehouse</div>
+          </div>
+          <div class="cloud-card">
+            <div class="cloud-card-emoji">📈</div>
+            <div class="cloud-card-name">Power BI</div>
+            <div class="cloud-card-type">Business Intelligence</div>
+          </div>
+          <div class="cloud-card">
+            <div class="cloud-card-emoji">⚙️</div>
+            <div class="cloud-card-name">Looker Studio</div>
+            <div class="cloud-card-type">Dashboards</div>
+          </div>
+          <div class="cloud-card">
+            <div class="cloud-card-emoji">🗄️</div>
+            <div class="cloud-card-name">Cloud Storage</div>
+            <div class="cloud-card-type">Armazenamento</div>
+          </div>
+        </div>
+
+        <div class="pipeline-bar">
+          <div class="pipe-node"><span class="pipe-dot" style="background:#60A5FA"></span> Ingestão</div>
+          <div class="pipe-arrow"></div>
+          <div class="pipe-node"><span class="pipe-dot" style="background:#A78BFA"></span> Transformação</div>
+          <div class="pipe-arrow"></div>
+          <div class="pipe-node"><span class="pipe-dot" style="background:#34D399"></span> Visualização</div>
+          <div class="pipe-arrow"></div>
+          <div class="pipe-node"><span class="pipe-dot" style="background:var(--accent)"></span> Decisão</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="sv-content reveal">
+      <span class="section-label">Cloud & Business Intelligence</span>
+      <h2>Dados organizados são a fundação da IA que funciona</h2>
+      <p>Implementamos Google BigQuery, Power BI e ferramentas de cloud com profissionais certificados. Uma infraestrutura de dados sólida é o que separa a IA que gera resultado da que só gera custo.</p>
+
+      <div class="sv-features">
+        <div class="sv-feature">
+          <div class="sv-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <h4>Profissionais certificados</h4>
+          <p>Time com certificações Google Cloud e Microsoft para implementações seguras.</p>
+        </div>
+        <div class="sv-feature">
+          <div class="sv-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+          <h4>Pipeline completo</h4>
+          <p>Da ingestão de dados à visualização em dashboards acionáveis.</p>
+        </div>
+      </div>
+
+      <div class="sv-actions">
+        <a href="/diagnostico/" class="btn-primary">Falar com especialista <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <div class="sv-badge">
+          <span class="sv-badge-icon" style="background:#4285F4;">G</span>
+          Google Cloud Partner
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     5. BLOCO 3 — JORNADA COMPLETA
+     ═══════════════════════════════════════════════════════════ -->
+<div class="service-block" style="background:var(--bg-soft);">
+  <div class="service-grid">
+
+    <!-- Visual: Journey Panel -->
+    <div class="sv-visual reveal">
+      <div class="sv-panel">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <div class="panel-header-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <span class="panel-title">Jornada n4flow</span>
+          </div>
+          <div class="panel-status">Estruturado</div>
+        </div>
+
+        <div class="journey-steps">
+          <div class="journey-step">
+            <div class="js-line">
+              <div class="js-circle">1</div>
+              <div class="js-connector"></div>
+            </div>
+            <div class="js-content">
+              <div class="js-title">Diagnóstico estratégico</div>
+              <div class="js-desc">Análise do cenário atual, dores e objetivos do negócio</div>
+            </div>
+          </div>
+          <div class="journey-step">
+            <div class="js-line">
+              <div class="js-circle">2</div>
+              <div class="js-connector"></div>
+            </div>
+            <div class="js-content">
+              <div class="js-title">Recomendação de ferramentas</div>
+              <div class="js-desc">Indicação imparcial de CRM, cloud, BI e plataformas</div>
+            </div>
+          </div>
+          <div class="journey-step">
+            <div class="js-line">
+              <div class="js-circle">3</div>
+              <div class="js-connector"></div>
+            </div>
+            <div class="js-content">
+              <div class="js-title">Implementação & integração</div>
+              <div class="js-desc">Setup, migração de dados e conexão entre sistemas</div>
+            </div>
+          </div>
+          <div class="journey-step">
+            <div class="js-line">
+              <div class="js-circle">4</div>
+            </div>
+            <div class="js-content">
+              <div class="js-title">Automação & IA</div>
+              <div class="js-desc">Agora sim: fluxos automatizados e IA conversacional</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="sv-content reveal">
+      <span class="section-label">Jornada completa</span>
+      <h2>Do diagnóstico à IA: uma jornada com fundamento</h2>
+      <p>Automação e IA não começam pelo código — começam pela estratégia. A n4flow acompanha sua empresa desde a escolha das ferramentas certas até a entrega de soluções inteligentes que realmente funcionam.</p>
+
+      <div class="sv-features">
+        <div class="sv-feature">
+          <div class="sv-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <h4>Rede de parceiros</h4>
+          <p>Conectamos você com implementadores especializados em cada ferramenta.</p>
+        </div>
+        <div class="sv-feature">
+          <div class="sv-feature-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4>Core em automação & IA</h4>
+          <p>Tudo que indicamos converge para o que fazemos melhor: automatizar e implementar IA.</p>
+        </div>
+      </div>
+
+      <div class="sv-actions">
+        <a href="/diagnostico/" class="btn-primary">Iniciar jornada <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        <a href="/" class="btn-secondary">Conhecer a n4flow</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     6. CTA FINAL (same as homepage)
+     ═══════════════════════════════════════════════════════════ -->
+<section class="cta-final">
+  <div class="container reveal">
+    <span class="section-label">Próximo passo</span>
+    <h2 class="section-title">Sua empresa não precisa de mais ferramentas. Precisa das ferramentas certas.</h2>
+    <p class="cta-sub">A n4flow ajuda você a construir a base que vai dar sustentação real para automação e IA no dia a dia do negócio.</p>
+    <div class="cta-buttons">
+      <a href="/diagnostico/" class="btn-primary">Solicitar diagnóstico <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+      <a href="https://wa.me/551152864920?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20a%20consultoria" target="_blank" rel="noopener" class="btn-secondary-light"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="opacity:.45"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> Falar com a n4flow</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER (identical to homepage) ═══ -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-left">
+      <img src="/logo-branco.svg" alt="n4flow" class="footer-logo">
+      <p>IA, Dados & Automação aplicados à operação da sua empresa.</p>
+      <p>São Paulo, SP · Atendimento em todo o Brasil · contato@n4flow.com.br</p>
+    </div>
+    <div class="footer-links">
+      <a href="/#solucoes">Soluções</a>
+      <a href="/#aplicacoes">Aplicações</a>
+      <a href="/#metodo">Método</a>
+      <a href="#" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating contact -->
+<a href="https://wa.me/551152864920?text=Ol%C3%A1!" target="_blank" rel="noopener" class="float-contact" aria-label="Entre em contato">
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  Entre em contato
+</a>
+
+<!-- ═══ COOKIE CONSENT ═══ -->
+<div id="cookie-consent" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;padding:0 1rem 1rem">
+  <div style="max-width:520px;margin:0 auto;background:#1A1D23;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.2rem 1.5rem;box-shadow:0 8px 40px rgba(0,0,0,.25);display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <p style="font-size:.82rem;color:rgba(255,255,255,.7);line-height:1.6;margin:0;font-family:'Outfit',-apple-system,sans-serif">
+        Utilizamos cookies para melhorar sua experiência. Ao continuar, você concorda com nossa
+        <a href="/privacidade/" target="_blank" style="color:#F07B2B;text-decoration:underline;font-weight:500">Política de Privacidade</a>.
+      </p>
+    </div>
+    <button onclick="acceptCookies()" style="padding:.6rem 1.5rem;background:#F07B2B;color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:'Outfit',-apple-system,sans-serif;white-space:nowrap;transition:all .2s" onmouseover="this.style.background='#D96A1F'" onmouseout="this.style.background='#F07B2B'">Aceitar</button>
+  </div>
+</div>
+<script>
+(function(){
+  if(document.cookie.indexOf('n4flow_cookies=accepted')!==-1)return;
+  var el=document.getElementById('cookie-consent');
+  if(el)el.style.display='block';
+})();
+function acceptCookies(){
+  document.cookie='n4flow_cookies=accepted;path=/;max-age=31536000;SameSite=Lax';
+  var el=document.getElementById('cookie-consent');
+  if(el)el.style.display='none';
+}
+</script>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(el => {
+    if (el.isIntersecting) {
+      el.target.classList.add('visible');
+      // Animate progress bars when visible
+      const bars = el.target.querySelectorAll('.diag-progress-fill');
+      bars.forEach(bar => setTimeout(() => bar.classList.add('animated'), 400));
+    }
+  });
+}, { threshold: .08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
