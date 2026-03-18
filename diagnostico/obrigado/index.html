@@ -25,14 +25,26 @@ nav{padding:1rem 2rem;display:flex;align-items:center;justify-content:center;bor
 .step-num{width:28px;height:28px;background:rgba(240,123,43,.1);color:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
 .home-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:.5rem;padding:.8rem 2rem;background:var(--orange);color:#fff;font-size:.95rem;font-weight:600;border-radius:10px;text-decoration:none;transition:all .3s}
 .home-link:hover{background:#D96A1F;transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,123,43,.35)}
-footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,.08)}
-.footer-content{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center}
-.footer-logo{height:22px;width:auto;opacity:.5}
-.footer-left p{font-size:.72rem;color:rgba(255,255,255,.3);font-family:var(--mono);margin-top:.5rem;line-height:1.6}
-.footer-links{display:flex;gap:1.5rem}
-.footer-links a{font-family:var(--mono);font-size:.7rem;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}
-.footer-links a:hover{color:var(--orange)}
-@media(max-width:768px){.footer-content{grid-template-columns:1fr;text-align:center}.footer-links{justify-content:center}}
+/* ── FOOTER ── */
+footer{background:#1A1D23;border-top:1px solid rgba(255,255,255,.08);padding:3rem 2rem 2rem}
+.footer-inner{max-width:1100px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.4fr 1fr auto;gap:3rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.footer-logo{height:22px;width:auto;opacity:.5;margin-bottom:.6rem;display:block}
+.footer-brand p{font-size:.75rem;color:rgba(255,255,255,.3);font-family:var(--mono);line-height:1.7;margin-top:.35rem}
+.footer-brand p a{color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}.footer-brand p a:hover{color:#F07B2B}
+.footer-nav{display:flex;flex-direction:column;gap:.6rem}
+.footer-nav-title{font-size:.65rem;font-family:var(--mono);font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem}
+.footer-nav a{font-size:.78rem;color:rgba(255,255,255,.3);text-decoration:none;transition:color .2s}.footer-nav a:hover{color:#F07B2B}
+.footer-social{display:flex;flex-direction:column;gap:.6rem}
+.footer-social-title{font-size:.65rem;font-family:var(--mono);font-weight:600;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.3rem}
+.footer-social-icons{display:flex;gap:.6rem}
+.footer-social-icons a{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);transition:all .25s;text-decoration:none}
+.footer-social-icons a:hover{border-color:#F07B2B;color:#F07B2B;background:rgba(240,123,43,.06);transform:translateY(-1px)}
+.footer-social-icons a svg{width:16px;height:16px}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:1.5rem;gap:1rem;flex-wrap:wrap}
+.footer-legal{font-size:.62rem;font-family:var(--mono);color:rgba(255,255,255,.3);line-height:1.7;opacity:.6}
+.footer-copy{font-size:.62rem;font-family:var(--mono);color:rgba(255,255,255,.3);opacity:.6}
+@media(max-width:768px){.footer-top{grid-template-columns:1fr;text-align:center;gap:2rem}.footer-nav{align-items:center}.footer-social{align-items:center}.footer-social-icons{justify-content:center}.footer-bottom{justify-content:center;text-align:center;flex-direction:column}}
 </style>
 </head>
 <body>
@@ -53,17 +65,34 @@ footer{background:var(--darker);padding:2.5rem 2rem;border-top:1px solid rgba(25
   <a href="/" class="home-link">Voltar ao site da n4flow</a>
 </div>
 <footer>
-  <div class="footer-content">
-    <div class="footer-left">
-      <img src="/logo-branco.svg" alt="n4flow" class="footer-logo">
-      <p>IA, Dados &amp; Automação aplicados à operação da sua empresa.</p>
-      <p>São Paulo, SP · Atendimento em todo o Brasil · contato@n4flow.com.br</p>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="/logo-branco.svg" alt="n4flow" class="footer-logo">
+        <p>IA, Dados &amp; Automação aplicados à operação da sua empresa.</p>
+        <p>São Paulo, SP · Atendimento em todo o Brasil</p>
+        <p><a href="mailto:contato@n4flow.com.br">contato@n4flow.com.br</a></p>
+      </div>
+      <div class="footer-nav">
+        <span class="footer-nav-title">Navegação</span>
+        <a href="/">Home</a>
+        <a href="/solucoes/">Soluções</a>
+        <a href="/consultoria/">Consultoria</a>
+        <a href="/#aplicacoes">Aplicações</a>
+        <a href="/#metodo">Método</a>
+        <a href="/diagnostico/">Solicitar diagnóstico</a>
+      </div>
+      <div class="footer-social">
+        <span class="footer-social-title">Redes</span>
+        <div class="footer-social-icons">
+          <a href="https://www.linkedin.com/company/n4flow" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+          <a href="https://www.instagram.com/n4flow" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        </div>
+      </div>
     </div>
-    <div class="footer-links">
-      <a href="/">Home</a>
-      <a href="/solucoes/">Soluções</a>
-      <a href="/#metodo">Método</a>
-      <a href="#" target="_blank">LinkedIn</a>
+    <div class="footer-bottom">
+      <span class="footer-legal">Benn Consultoria em Business Intelligence e Marketing Ltda · CNPJ: 05.376.867/0001-60</span>
+      <span class="footer-copy">© 2026 n4flow. Todos os direitos reservados.</span>
     </div>
   </div>
 </footer>
